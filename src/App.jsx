@@ -296,14 +296,22 @@ export default function App() {
       setCurrentGuess(nextGuess);
       
       // Auto-advance focus to the next empty cell (wrapping around)
+      let foundEmpty = false;
       let nextFocus = focusedCellIndex;
       for (let i = 1; i <= 5; i++) {
         const idx = (focusedCellIndex + i) % 5;
         if (nextGuess[idx] === '') {
           nextFocus = idx;
+          foundEmpty = true;
           break;
         }
       }
+      
+      // If the word is completely full (no empty cells), advance to the immediate next cell
+      if (!foundEmpty) {
+        nextFocus = (focusedCellIndex + 1) % 5;
+      }
+      
       setFocusedCellIndex(nextFocus);
     }
   };
