@@ -286,7 +286,8 @@ export default function App() {
 
   // 4. Handle Typing and Submitting Guesses
   const onChar = (char) => {
-    if (activeWordState.won === 1 || activeWordState.attempts >= 6) return;
+    if (activeWordState.won === 1 || activeWordState.attempts >= 6 || submitting) return;
+    if (focusedCellIndex === -1) return; // Block typing if word is fully populated
     
     // Normalize Ñ to keep it, but ignore non-alphabetical characters
     const upperChar = char.toUpperCase();
@@ -307,9 +308,9 @@ export default function App() {
         }
       }
       
-      // If the word is completely full (no empty cells), advance to the immediate next cell
+      // If the word is completely full (no empty cells), clear focus (-1)
       if (!foundEmpty) {
-        nextFocus = (focusedCellIndex + 1) % 5;
+        nextFocus = -1;
       }
       
       setFocusedCellIndex(nextFocus);
@@ -320,16 +321,23 @@ export default function App() {
     if (activeWordState.won === 1 || activeWordState.attempts >= 6) return;
     
     const nextGuess = [...currentGuess];
-    if (nextGuess[focusedCellIndex] !== '') {
-      // Clear focused cell if it's not empty, keep focus there
-      nextGuess[focusedCellIndex] = '';
+    if (focusedCellIndex === -1) {
+      // If word was completely full, clear the last cell (index 4) and set focus to it
+      nextGuess[4] = '';
       setCurrentGuess(nextGuess);
-    } else if (focusedCellIndex > 0) {
-      // If already empty, move focus to the previous cell and clear it (only if not already at the first cell)
-      const prevFocus = focusedCellIndex - 1;
-      nextGuess[prevFocus] = '';
-      setCurrentGuess(nextGuess);
-      setFocusedCellIndex(prevFocus);
+      setFocusedCellIndex(4);
+    } else {
+      if (nextGuess[focusedCellIndex] !== '') {
+        // Clear focused cell if it's not empty, keep focus there
+        nextGuess[focusedCellIndex] = '';
+        setCurrentGuess(nextGuess);
+      } else if (focusedCellIndex > 0) {
+        // If already empty, move focus to the previous cell and clear it (only if not already at the first cell)
+        const prevFocus = focusedCellIndex - 1;
+        nextGuess[prevFocus] = '';
+        setCurrentGuess(nextGuess);
+        setFocusedCellIndex(prevFocus);
+      }
     }
   };
 
