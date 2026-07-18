@@ -6,7 +6,7 @@ export default function AuthModal({ user, onClose, onAuthSuccess, onLogout }) {
   const [step, setStep] = useState(user ? 'profile' : 'username'); // username -> (login_options | register) -> profile
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [hasPasskey, setHasPasskey] = useState(false);
+  const [hasPasskey, setHasPasskey] = useState(user?.hasPasskey || false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -352,6 +352,15 @@ export default function AuthModal({ user, onClose, onAuthSuccess, onLogout }) {
             <ShieldCheck size={48} color="var(--color-correct)" />
             <div>
               <div className="user-badge">@{user?.username}</div>
+              {hasPasskey ? (
+                <div style={{ color: 'var(--color-correct)', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', margin: '8px 0' }}>
+                  <span>✓ Passkey Vinculada</span>
+                </div>
+              ) : (
+                <div style={{ color: 'var(--text-secondary)', fontSize: '12px', margin: '8px 0' }}>
+                  Sin Passkeys vinculadas
+                </div>
+              )}
               <p className="help-text">
                 Tu progreso y estadísticas están sincronizados de forma segura con la nube.
               </p>
@@ -364,7 +373,7 @@ export default function AuthModal({ user, onClose, onAuthSuccess, onLogout }) {
               id="register-passkey-btn"
             >
               <Fingerprint size={20} />
-              {hasPasskey ? 'Registrar otra Passkey' : 'Activar Passkey en este móvil'}
+              {hasPasskey ? 'Agregar otra Passkey' : 'Activar Passkey en este móvil'}
             </button>
 
             <div className="logout-btn-container w-full">

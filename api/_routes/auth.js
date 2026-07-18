@@ -201,9 +201,16 @@ router.post('/login-password', authLimiter, validate(loginSchema), async (req, r
       path: '/'
     });
 
+    // Check if user has registered passkeys
+    const credRes = await db.execute({
+      sql: 'SELECT id FROM credentials WHERE user_id = ?',
+      args: [user.id]
+    });
+    const hasPasskey = credRes.rows.length > 0;
+
     return res.json({
       success: true,
-      user: { id: user.id, username: cleanUsername }
+      user: { id: user.id, username: cleanUsername, hasPasskey }
     });
   } catch (error) {
     console.error('Error during password login:', error);
@@ -218,16 +225,34 @@ router.post('/logout', (req, res) => {
 });
 
 // Fetch current user details
-router.get('/me', (req, res) => {
+router.get('/me', async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ error: 'No autenticado.' });
   }
-  return res.json({
-    user: {
-      id: req.user.id,
-      username: req.user.username
-    }
-  });
+  try {
+    const credRes = await db.execute({
+      sql: 'SELECT id FROM credentials WHERE user_id = ?',
+      args: [req.user.id]
+    });
+    const hasPasskey = credRes.rows.length > 0;
+
+    return res.json({
+      user: {
+        id: req.user.id,
+        username: req.user.username,
+        hasPasskey
+      }
+    });
+  } catch (err) {
+    console.error('Error in /me:', err);
+    return res.json({
+      user: {
+        id: req.user.id,
+        username: req.user.username,
+        hasPasskey: false
+      }
+    });
+  }
 });
 
 // --- PASSKEY (WEBAUTHN) ENDPOINTS ---
