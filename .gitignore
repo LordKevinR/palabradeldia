@@ -1,0 +1,33 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+
+# Production / Build output
+dist/
+build/
+.vercel/
+
+# Environment variables & secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.development
+.env.production
+.env.test
+
+# IDE / Editor configuration files
+.idea/
+.vscode/
+*.suo
+.DS_Store
+
+# Logs
+logs
+*.log
+
+# Temporary/Cache files
+.eslintcache
+.cache/
+tmp/
