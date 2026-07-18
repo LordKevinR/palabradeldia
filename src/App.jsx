@@ -311,9 +311,9 @@ export default function App() {
       // Clear focused cell if it's not empty, keep focus there
       nextGuess[focusedCellIndex] = '';
       setCurrentGuess(nextGuess);
-    } else {
-      // If already empty, move focus to the previous cell and clear it
-      const prevFocus = (focusedCellIndex - 1 + 5) % 5;
+    } else if (focusedCellIndex > 0) {
+      // If already empty, move focus to the previous cell and clear it (only if not already at the first cell)
+      const prevFocus = focusedCellIndex - 1;
       nextGuess[prevFocus] = '';
       setCurrentGuess(nextGuess);
       setFocusedCellIndex(prevFocus);

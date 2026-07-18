@@ -22,7 +22,7 @@ export default function Row({ guess, evaluation, isCurrent, isShake, focusedCell
       const char = guess && guess[i] ? guess[i] : '';
       cells.push(
         <Cell 
-          key={`${i}-${char}`} // Re-keying triggers pop animation when character changes
+          key={i} 
           value={char} 
           isPop={char !== ''}
           isFocused={i === focusedCellIndex}
