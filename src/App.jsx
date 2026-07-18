@@ -9,7 +9,11 @@ import { Award, Copy, CheckCircle2, RotateCcw, X } from 'lucide-react';
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(() => {
+    const saved = localStorage.getItem('palabradeldia_last_word_index');
+    const parsed = parseInt(saved, 10);
+    return parsed >= 1 && parsed <= 10 ? parsed : 1;
+  });
   const [dateStr, setDateStr] = useState('');
   const [todayDateStr, setTodayDateStr] = useState('');
   const [currentGuess, setCurrentGuess] = useState(['', '', '', '', '']);
@@ -549,6 +553,7 @@ export default function App() {
         wordsState={wordsState} 
         onChangeIndex={(idx) => {
           setActiveIndex(idx);
+          localStorage.setItem('palabradeldia_last_word_index', idx);
           setCurrentGuess(['', '', '', '', '']);
           setFocusedCellIndex(0);
         }} 
