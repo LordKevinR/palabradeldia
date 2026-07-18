@@ -292,9 +292,9 @@ export default function App() {
       setCurrentGuess(nextGuess);
       
       // Auto-advance focus to the next empty cell (wrapping around)
-      let nextFocus = (focusedCellIndex + 1) % 5;
-      for (let i = 0; i < 5; i++) {
-        const idx = (focusedCellIndex + i + 1) % 5;
+      let nextFocus = focusedCellIndex;
+      for (let i = 1; i <= 5; i++) {
+        const idx = (focusedCellIndex + i) % 5;
         if (nextGuess[idx] === '') {
           nextFocus = idx;
           break;
