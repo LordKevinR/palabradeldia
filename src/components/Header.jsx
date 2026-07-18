@@ -8,7 +8,7 @@ export default function Header({ user, onOpenAuth, onOpenStats, onOpenHelp }) {
         <HelpCircle size={22} />
       </button>
       
-      <h1>Palabra del Día</h1>
+      <h1>Palabras Diarias</h1>
       
       <div className="header-icons">
         <button className="icon-btn" onClick={onOpenStats} title="Estadísticas" id="stats-btn">

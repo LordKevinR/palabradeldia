@@ -57,11 +57,13 @@ body {
 
 /* Layout components */
 header {
-  height: 60px;
+  height: calc(60px + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 16px;
+  padding-left: 16px;
+  padding-right: 16px;
   border-bottom: var(--glass-border);
   background: rgba(12, 12, 14, 0.8);
   backdrop-filter: blur(10px);
