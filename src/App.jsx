@@ -17,6 +17,7 @@ export default function App() {
   const [isShake, setIsShake] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [modal, setModal] = useState(null); // 'help' | 'stats' | 'auth' | null
+  const [submitting, setSubmitting] = useState(false);
   
   // Game states for all 10 words
   // Format: { [index]: { guesses: [], evaluations: [], won: 0, attempts: 0, solution: null } }
@@ -321,7 +322,7 @@ export default function App() {
   };
 
   const onEnter = async () => {
-    if (activeWordState.won === 1 || activeWordState.attempts >= 6) return;
+    if (activeWordState.won === 1 || activeWordState.attempts >= 6 || submitting) return;
     
     const guessString = currentGuess.join('');
     if (guessString.length !== 5) {
@@ -331,6 +332,7 @@ export default function App() {
       return;
     }
 
+    setSubmitting(true);
     try {
       const res = await fetch('/api/game/guess', {
         method: 'POST',
@@ -349,6 +351,7 @@ export default function App() {
         showToast(data.error || 'La palabra no es válida.');
         setIsShake(true);
         setTimeout(() => setIsShake(false), 500);
+        setSubmitting(false);
         return;
       }
 
@@ -450,6 +453,8 @@ export default function App() {
     } catch (err) {
       console.error(err);
       showToast('Error de red al procesar palabra.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
