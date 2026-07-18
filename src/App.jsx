@@ -293,24 +293,31 @@ export default function App() {
     const upperChar = char.toUpperCase();
     if (/^[A-ZÑ]$/.test(upperChar)) {
       const nextGuess = [...currentGuess];
+      const wasAlreadyFull = currentGuess.every(c => c !== '');
+      
       nextGuess[focusedCellIndex] = upperChar;
       setCurrentGuess(nextGuess);
       
-      // Auto-advance focus to the next empty cell (wrapping around)
-      let foundEmpty = false;
       let nextFocus = focusedCellIndex;
-      for (let i = 1; i <= 5; i++) {
-        const idx = (focusedCellIndex + i) % 5;
-        if (nextGuess[idx] === '') {
-          nextFocus = idx;
-          foundEmpty = true;
-          break;
+      if (wasAlreadyFull) {
+        // Overwrite mode: advance to the immediate next cell sequentially
+        nextFocus = (focusedCellIndex + 1) % 5;
+      } else {
+        // Typing mode: auto-advance focus to the next empty cell (wrapping around)
+        let foundEmpty = false;
+        for (let i = 1; i <= 5; i++) {
+          const idx = (focusedCellIndex + i) % 5;
+          if (nextGuess[idx] === '') {
+            nextFocus = idx;
+            foundEmpty = true;
+            break;
+          }
         }
-      }
-      
-      // If the word is completely full (no empty cells), clear focus (-1)
-      if (!foundEmpty) {
-        nextFocus = -1;
+        
+        // If the word is completely full (no empty cells), clear focus (-1)
+        if (!foundEmpty) {
+          nextFocus = -1;
+        }
       }
       
       setFocusedCellIndex(nextFocus);
