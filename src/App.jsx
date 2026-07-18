@@ -300,8 +300,12 @@ export default function App() {
       
       let nextFocus = focusedCellIndex;
       if (wasAlreadyFull) {
-        // Overwrite mode: advance to the immediate next cell sequentially
-        nextFocus = (focusedCellIndex + 1) % 5;
+        // Overwrite mode: advance sequentially, but clear focus if we just typed the last character (index 4)
+        if (focusedCellIndex === 4) {
+          nextFocus = -1;
+        } else {
+          nextFocus = (focusedCellIndex + 1) % 5;
+        }
       } else {
         // Typing mode: auto-advance focus to the next empty cell (wrapping around)
         let foundEmpty = false;
